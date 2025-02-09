@@ -17,32 +17,42 @@ int load_memory_image(const char *filename, uint32_t *memory,
     fprintf(stderr, "Error: Cannot open file '%s'\n", filename);
     return 1;
   }
+  
   char line[MAX_LINE_LENGTH];
-  uint32_t address, word;
+  char address_str[MAX_LINE_LENGTH], value_str[MAX_LINE_LENGTH];
+  uint32_t address;
+
   while (fgets(line, sizeof(line), fp)) {
     if (line[0] == '\n' || line[0] == '#')
       continue;
-    if (sscanf(line, "%x: %x", &address, &word) != 2) {
+    if (sscanf(line, "%[^:]: %s", address_str, value_str) != 2) {
       fprintf(stderr, "Warning: Invalid line format: %s", line);
       continue;
     }
-    if (address % 4 != 0) {
-      fprintf(stderr, "Warning: Address 0x%x not word aligned, skipping.\n",
-              address);
-      continue;
-    }
-    size_t index = address / 4;
-    if (index >= num_words) {
+
+    address = (uint32_t)strtoul(address_str, NULL, 16);
+    if (address >= MEMORY_SIZE_BYTES) {
       fprintf(stderr, "Warning: Address 0x%x out of bounds, skipping.\n",
               address);
       continue;
     }
-    memory[index] = word;
+
+    size_t value_len = strlen(value_str);
+    uint32_t value = (uint32_t)strtoul(value_str, NULL, 16);
+
+    if (value_len <= 2) {
+      write_memory_1(memory, address, (uint8_t)value);
+    } else if (value_len <= 4) {
+      write_memory_2(memory, address, (uint16_t)value);
+    } else if (value_len <= 8) {
+      write_memory_4(memory, address, value);
+    } else {
+      fprintf(stderr, "Warning: Invalid value length: %s", line);
+    }
   }
   fclose(fp);
   return 0;
 }
-
 // Read 1 byte from memory.
 uint8_t read_memory_1(uint32_t *memory, uint32_t address) {
   if (address >= MEMORY_SIZE_BYTES) {
