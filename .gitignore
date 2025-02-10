@@ -1,3 +1,9 @@
+# Build Directories
+build/
+
+# Executables
+riscv
+
 # Prerequisites
 *.d
 

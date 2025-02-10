@@ -1,14 +1,19 @@
 CC = gcc
 CFLAGS = -Wall -Werror -g
+BUILD_DIR = build
 
-riscv: riscv.o memory.o
-	$(CC) $(CFLAGS) riscv.o memory.o -o riscv
+SRC = riscv.c memory.c decode.c execute.c
+OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
+TARGET = riscv
 
-riscv.o: riscv.c
-	$(CC) $(CFLAGS) -c riscv.c
+$(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
 
-memory.o: memory.c memory.h
-	$(CC) $(CFLAGS) -c memory.c
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) $(OBJ) -o $(TARGET)
 
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
+	
 clean:
-	rm -f riscv riscv.o memory.o
+	rm -rf $(BUILD_DIR) $(TARGET)

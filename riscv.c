@@ -1,4 +1,6 @@
 #include "memory.h"
+#include "decode.h"
+#include "execute.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -35,16 +37,26 @@ int main(int argc, char *argv[]) {
   registers[1] = 0;
 
   // Set the program counter.
-  uint32_t pc = start_address;
+  // minus 4 to make sure first instruction is correct
+  uint32_t pc = start_address - 4;
 
   printf("Memory image loaded.\nStarting simulation at PC = 0x%08x, SP (x2) = "
          "0x%08x\n",
          pc, registers[2]);
 
-  // (The simulator's fetch/decode/execute loop would go here.)
   // End at PC = 0 (jr ra with ra == 0)
   while (pc != 0) {
-    
+    // inc first so if halt sets to zero function actually stops
+    pc += 4;
+
+    // Fetch
+    uint32_t instruction = memory[pc / 4];
+
+    // Decode
+    Instruction decoded = decode_instruction(instruction);
+
+    // Execute
+    execute_instruction(decoded, registers, &pc, memory);
   }
 
   free(memory);
