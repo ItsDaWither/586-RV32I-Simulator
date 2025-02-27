@@ -13,6 +13,9 @@ static int32_t sign_extend(uint32_t value, uint32_t bits) {
 void execute_addi(Instruction insn, uint32_t *registers, uint32_t *pc) {
   registers[insn.rd] = registers[insn.rs1] + insn.imm;
 }
+void execute_jr(Instruction insn, uint32_t *registers, uint32_t *pc) {
+  *pc = registers[insn.rs1] & (~1);
+}
 
 void execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
   int32_t offset = insn.imm;
@@ -242,6 +245,16 @@ void execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
     case 0x7: // bgeu
       execute_bgeu(insn, registers, pc);
       break;
+    case 0x67: // JALR opcode
+          if (insn.rd == 0 && insn.imm == 0) {
+          execute_jr(insn, registers, pc);
+            break;
+          } else {
+          execute_jalr(insn, registers, pc);
+            break;
+          }
+  break;
+
     default:
       execute_unknown(insn, registers, pc);
       break;
