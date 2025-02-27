@@ -45,9 +45,8 @@ int main(int argc, char *argv[]) {
          pc, registers[2]);
 
   // End at PC = 0 (jr ra with ra == 0)
-  while (pc != 0) {
+  while (1) {
     // inc first so if halt sets to zero function actually stops
-    pc += 4;
 
     // Fetch
     uint32_t instruction = memory[pc / 4];
