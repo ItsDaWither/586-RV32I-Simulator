@@ -13,6 +13,7 @@ static int32_t sign_extend(uint32_t value, uint32_t bits) {
 void execute_addi(Instruction insn, uint32_t *registers, uint32_t *pc) {
   registers[insn.rd] = registers[insn.rs1] + insn.imm;
 }
+
 void execute_jr(Instruction insn, uint32_t *registers, uint32_t *pc) {
   *pc = registers[insn.rs1] & (~1);
 }
@@ -29,47 +30,47 @@ void execute_lui(Instruction insn, uint32_t *registers, uint32_t *pc) {
 }
 
 void execute_auipc(Instruction insn, uint32_t *registers, uint32_t *pc) {
-  registers[insn.rd] = *pc - 4 + insn.imm; // pc was already incremented
+  registers[insn.rd] = *pc + insn.imm;
 }
 
 void execute_jal(Instruction insn, uint32_t *registers, uint32_t *pc) {
   int32_t offset = insn.imm;
   registers[insn.rd] = *pc; // Store return address
-  *pc = *pc + offset - 4;   // was already incremented
+  *pc = *pc + offset;
 }
 
 void execute_beq(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] == registers[insn.rs2]) {
-    *pc = *pc + insn.imm - 4; // was already incremented
+    *pc = *pc + insn.imm;
   }
 }
 
 void execute_bne(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] != registers[insn.rs2]) {
-    *pc = *pc + insn.imm - 4; // was already incremented
+    *pc = *pc + insn.imm;
   }
 }
 void execute_blt(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if ((int32_t)registers[insn.rs1] < (int32_t)registers[insn.rs2]) {
-    *pc = *pc + insn.imm - 4; // was already incremented
+    *pc = *pc + insn.imm;
   }
 }
 
 void execute_bge(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if ((int32_t)registers[insn.rs1] >= (int32_t)registers[insn.rs2]) {
-    *pc = *pc + insn.imm - 4; // was already incremented
+    *pc = *pc + insn.imm;
   }
 }
 
 void execute_bltu(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] < registers[insn.rs2]) {
-    *pc = *pc + insn.imm - 4; // was already incremented
+    *pc = *pc + insn.imm;
   }
 }
 
 void execute_bgeu(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] >= registers[insn.rs2]) {
-    *pc = *pc + insn.imm - 4; // was already incremented
+    *pc = *pc + insn.imm;
   }
 }
 
@@ -246,14 +247,14 @@ void execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
       execute_bgeu(insn, registers, pc);
       break;
     case 0x67: // JALR opcode
-          if (insn.rd == 0 && insn.imm == 0) {
-          execute_jr(insn, registers, pc);
-            break;
-          } else {
-          execute_jalr(insn, registers, pc);
-            break;
-          }
-  break;
+      if (insn.rd == 0 && insn.imm == 0) {
+        execute_jr(insn, registers, pc);
+        break;
+      } else {
+        execute_jalr(insn, registers, pc);
+        break;
+      }
+      break;
 
     default:
       execute_unknown(insn, registers, pc);

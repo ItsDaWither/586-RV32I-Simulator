@@ -1,0 +1,2 @@
+#!/bin/bash
+grep -o  '^[[:blank:]]*[[:xdigit:]]*:[[:blank:]][[:xdigit:]]*'
