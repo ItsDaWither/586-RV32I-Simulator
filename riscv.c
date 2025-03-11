@@ -87,10 +87,6 @@ int main(int argc, char *argv[]) {
       printf("\n");
     }
 
-    if (pc == 0 && registers[1] == 0) {
-      break;
-    }
-
     pc = pc + 4;
   }
 

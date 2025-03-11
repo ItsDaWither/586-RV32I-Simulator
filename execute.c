@@ -41,36 +41,36 @@ void execute_jal(Instruction insn, uint32_t *registers, uint32_t *pc) {
 
 void execute_beq(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] == registers[insn.rs2]) {
-    *pc = *pc + insn.imm;
+    *pc = *pc + insn.imm - 4;
   }
 }
 
 void execute_bne(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] != registers[insn.rs2]) {
-    *pc = *pc + insn.imm;
+    *pc = *pc + insn.imm - 4;
   }
 }
 void execute_blt(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if ((int32_t)registers[insn.rs1] < (int32_t)registers[insn.rs2]) {
-    *pc = *pc + insn.imm;
+    *pc = *pc + insn.imm - 4;
   }
 }
 
 void execute_bge(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if ((int32_t)registers[insn.rs1] >= (int32_t)registers[insn.rs2]) {
-    *pc = *pc + insn.imm;
+    *pc = *pc + insn.imm - 4;
   }
 }
 
 void execute_bltu(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] < registers[insn.rs2]) {
-    *pc = *pc + insn.imm;
+    *pc = *pc + insn.imm - 4;
   }
 }
 
 void execute_bgeu(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] >= registers[insn.rs2]) {
-    *pc = *pc + insn.imm;
+    *pc = *pc + insn.imm - 4;
   }
 }
 
