@@ -33,13 +33,12 @@ int execute_jal(Instruction insn, uint32_t *registers, uint32_t *pc) {
 }
 
 int execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
-  if ((registers[insn.rs1] & (~1)) == 0 && insn.rd == 0) {
+  if (insn.rs1 == 1 && insn.rd == 0) { // Source reg is x1 (ra) and dest reg is x0 (zero)
     return 1; // Halt on jr ra with ra == 0
   }
   int32_t offset = insn.imm;
-  uint32_t temp_pc = *pc;
+  registers[insn.rd] = *pc + 4;
   *pc = ((registers[insn.rs1] + offset) & (~1)); // clear the last bit
-  registers[insn.rd] = temp_pc + 4;
   return 0;
 }
 

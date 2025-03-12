@@ -77,7 +77,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (verbose_mode) {
-      printf("Registers:\n");
+      printf("Registers After Execution:\n");
       for (int i = 0; i < NUM_REGISTERS; i++) {
         printf("x%d: 0x%08x ", i, registers[i]);
         if ((i + 1) % 4 == 0) {
