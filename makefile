@@ -2,11 +2,11 @@ CC = gcc
 CFLAGS = -Wall -Werror -g
 BUILD_DIR = build
 
-SRC = riscv.c memory.c decode.c execute.c
-OBJ = $(SRC:%.c=$(BUILD_DIR)/%.o)
+SRC = src/riscv.c src/memory.c src/decode.c src/execute.c
+OBJ = $(SRC:src/%.c=$(BUILD_DIR)/%.o)
 TARGET = riscv
 
-$(BUILD_DIR)/%.o: %.c | $(BUILD_DIR)
+$(BUILD_DIR)/%.o: src/%.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(TARGET): $(OBJ)
