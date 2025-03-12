@@ -264,6 +264,9 @@ int execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
   case 0x6f: // jal
     return execute_jal(insn, registers, pc);
     break;
+  case 0x67: // JALR opcode
+    return execute_jalr(insn, registers, pc);
+    break;
   case 0x63: // branch instructions
     switch (insn.funct3) {
     case 0x0: // beq
@@ -283,9 +286,6 @@ int execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
       break;
     case 0x7: // bgeu
       return execute_bgeu(insn, registers, pc);
-      break;
-    case 0x67: // JALR opcode
-      return execute_jalr(insn, registers, pc);
       break;
 
     default:
