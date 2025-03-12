@@ -15,18 +15,13 @@ int execute_addi(Instruction insn, uint32_t *registers, uint32_t *pc) {
   return 0;
 }
 
-int execute_jr(Instruction insn, uint32_t *registers, uint32_t *pc) {
-  if ((registers[insn.rs1] & (~1)) == 0) {
+int execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
+  if ((registers[insn.rs1] & (~1)) == 0 && insn.rd == 0) {
     return 1; // Halt on jr ra with ra == 0
   }
-  *pc = registers[insn.rs1] & (~1);
-  return 0;
-}
-
-int execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
   int32_t offset = insn.imm;
   uint32_t temp_pc = *pc;
-  *pc = (registers[insn.rs1] + offset) & (~1); // clear the last bit
+  *pc = ((registers[insn.rs1] + offset) & (~1)) + 4; // clear the last bit
   registers[insn.rd] = temp_pc;
   return 0;
 }
@@ -252,7 +247,7 @@ int execute_ecall(Instruction insn, uint32_t *registers, uint32_t *pc) {
 
 // default handler
 int execute_unknown(Instruction insn, uint32_t *registers, uint32_t *pc) {
-  fprintf(stderr, "Unknown instruction: opcode=%x\n", insn.opcode);
+  fprintf(stderr, "Unknown instruction: opcode=0x%x\n", insn.opcode);
   *pc = 0; // set pc to zero to halt execution
   return 1;
 }
@@ -290,13 +285,7 @@ int execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
       return execute_bgeu(insn, registers, pc);
       break;
     case 0x67: // JALR opcode
-      if (insn.rd == 0 && insn.imm == 0) {
-        return execute_jr(insn, registers, pc);
-        break;
-      } else {
-        return execute_jalr(insn, registers, pc);
-        break;
-      }
+      return execute_jalr(insn, registers, pc);
       break;
 
     default:
