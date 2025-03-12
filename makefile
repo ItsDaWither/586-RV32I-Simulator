@@ -17,3 +17,4 @@ $(BUILD_DIR):
 	
 clean:
 	rm -rf $(BUILD_DIR) $(TARGET)
+	find assembly_tests -name "*.o" -delete ; find assembly_tests -name "*.mem" -delete
