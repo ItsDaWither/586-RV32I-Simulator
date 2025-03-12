@@ -142,3 +142,12 @@ void write_memory_4(uint32_t *memory, uint32_t address, uint32_t value) {
     }
   }
 }
+
+void print_memory(uint32_t *memory, size_t num_words) {
+  printf("Memory Contents (Non-Zero):\n");
+  for (size_t i = 0; i < num_words; i++) {
+    if (memory[i] != 0) {
+      printf("0x%08x: 0x%08x\n", (uint32_t)(i * 4), memory[i]);
+    }
+  }
+}

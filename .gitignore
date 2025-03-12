@@ -8,6 +8,7 @@ riscv
 *.d
 
 # Object files
+*.mem
 *.o
 *.ko
 *.obj

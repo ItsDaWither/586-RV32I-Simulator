@@ -100,6 +100,8 @@ int main(int argc, char *argv[]) {
   }
   printf("\n");
 
+  print_memory(memory, MEMORY_WORDS);
+
   free(memory);
   return 0;
 }
