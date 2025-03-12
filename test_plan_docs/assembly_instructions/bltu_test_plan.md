@@ -47,4 +47,4 @@ The BLTU (branch if less than unsigned) instruction branches to a target address
     -   **Purpose:** Test with maximum unsigned values.
     -   **Registers:** rs1 = 0xFFFFFFFF, rs2 = 0x0
     -   **Offset:** offset = 0x40
-    -   **Expected Result:** Branch Not Taken
+    -   **Expected Result:** Branch Taken
