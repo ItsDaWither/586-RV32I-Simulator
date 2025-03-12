@@ -61,10 +61,6 @@ int main(int argc, char *argv[]) {
   while (1) {
     // Fetch
     uint32_t instruction = memory[pc / 4];
-    if (instruction == 0) {
-      printf("Simulation halt -- zero instruction.\n");
-      break;
-    }
 
     // Decode
     Instruction decoded = decode_instruction(instruction);
@@ -74,7 +70,11 @@ int main(int argc, char *argv[]) {
     }
 
     // Execute
-    execute_instruction(decoded, registers, &pc, memory);
+    int failure = execute_instruction(decoded, registers, &pc, memory);
+    if (failure) {
+      printf("Simulation halt -- zero or invalid instruction.\n");
+      break;
+    }
 
     if (verbose_mode) {
       printf("Registers:\n");

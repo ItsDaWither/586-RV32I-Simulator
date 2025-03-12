@@ -5,7 +5,7 @@
 #include "decode.h"
 #include <stdint.h>
 
-void execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
+int execute_instruction(Instruction insn, uint32_t *registers, uint32_t *pc,
                          uint32_t *memory);
 
 #endif
