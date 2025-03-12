@@ -21,8 +21,8 @@ int execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
   }
   int32_t offset = insn.imm;
   uint32_t temp_pc = *pc;
-  *pc = ((registers[insn.rs1] + offset) & (~1)) + 4; // clear the last bit
-  registers[insn.rd] = temp_pc;
+  *pc = ((registers[insn.rs1] + offset) & (~1)); // clear the last bit
+  registers[insn.rd] = temp_pc + 4;
   return 0;
 }
 
