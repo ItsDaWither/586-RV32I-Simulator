@@ -12,17 +12,18 @@ def run_commands(assembly_file):
     try:
         base_name = os.path.splitext(assembly_file)[0]
         object_file = base_name + ".o"
+        output_file = base_name + ".out"
         mem_file = base_name + ".mem"
 
         # rv32as test.s -o test.o
         subprocess.run(["/usr/bin/riscv64-elf-as", "-fpic", "-march=rv32i", "-mabi=ilp32", assembly_file, "-o", object_file], check=True)
 
         # rv32ld test.o
-        subprocess.run(["/usr/bin/riscv64-elf-ld", "-melf32lriscv", object_file], check=True)
+        subprocess.run(["/usr/bin/riscv64-elf-ld", "-melf32lriscv", "-Ttext=0x0", object_file, "-o", output_file], check=True)
 
         # rv32objdump -d | rv32pp > test.mem
         with open(mem_file, "w") as outfile:
-            rv32objdump_process = subprocess.Popen(["/usr/bin/riscv64-elf-objdump", "-d", object_file], stdout=subprocess.PIPE)
+            rv32objdump_process = subprocess.Popen(["/usr/bin/riscv64-elf-objdump", "-d", output_file], stdout=subprocess.PIPE)
             rv32pp_process = subprocess.Popen(["./rv32pp"], stdin=rv32objdump_process.stdout, stdout=outfile)
             if rv32objdump_process.stdout:
                 rv32objdump_process.stdout.close()  # Allow rv32objdump to receive a SIGPIPE if rv32pp exits.

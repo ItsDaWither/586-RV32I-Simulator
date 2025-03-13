@@ -12,16 +12,20 @@ args = parser.parse_args()
 def run_commands(c_file):
     try:
         base_name = os.path.splitext(c_file)[0]
+        assy_file = os.path.join(c_files_dir, base_name.replace(c_files_dir + '/', '') + ".s")
         object_file = os.path.join(c_files_dir, base_name.replace(c_files_dir + '/', '') + ".o")
+        out_file = os.path.join(c_files_dir, base_name.replace(c_files_dir + '/', '') + ".out")
         mem_file = os.path.join(c_files_dir, base_name.replace(c_files_dir + '/', '') + ".mem")
-
 
         # gcc -Wall -m32 -c test.c -o test.o
         subprocess.run(["/usr/bin/riscv64-elf-gcc", "-Wall", "-march=rv32i", "-mabi=ilp32", "-c", c_file, "-o", object_file], check=True)
 
+        # rv32ld test.o
+        subprocess.run(["/usr/bin/riscv64-elf-ld", "-emain", "-melf32lriscv", "-Ttext=0x0",  object_file, "-o", out_file], check=True)
+
         # riscv64-linux-gnu-objdump -d test.o | ./rv32pp > test.mem
         with open(mem_file, "w") as outfile:
-            rv32objdump_process = subprocess.Popen(["/usr/bin/riscv64-linux-gnu-objdump", "-d", object_file], stdout=subprocess.PIPE)
+            rv32objdump_process = subprocess.Popen(["/usr/bin/riscv64-linux-gnu-objdump", "-d", out_file], stdout=subprocess.PIPE)
             rv32pp_process = subprocess.Popen(["./rv32pp"], stdin=rv32objdump_process.stdout, stdout=outfile)
             if rv32objdump_process.stdout:
                 rv32objdump_process.stdout.close()  # Allow rv32objdump to receive a SIGPIPE if rv32pp exits.
