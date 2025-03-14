@@ -87,6 +87,7 @@ int main(int argc, char *argv[]) {
       printf("\n");
     }
 
+    registers[0] = 0; // Reset zero register if it was written to
     pc = pc + 4;
   }
 
