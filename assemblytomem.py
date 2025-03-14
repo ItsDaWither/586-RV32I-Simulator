@@ -23,10 +23,26 @@ def run_commands(assembly_file):
 
         # rv32objdump -d | rv32pp > test.mem
         with open(mem_file, "w") as outfile:
-            rv32objdump_process = subprocess.Popen(["/usr/bin/riscv64-elf-objdump", "-d", output_file], stdout=subprocess.PIPE)
-            rv32pp_process = subprocess.Popen(["./rv32pp"], stdin=rv32objdump_process.stdout, stdout=outfile)
-            if rv32objdump_process.stdout:
-                rv32objdump_process.stdout.close()  # Allow rv32objdump to receive a SIGPIPE if rv32pp exits.
+            rv32objdump_process_1 = subprocess.Popen(["/usr/bin/riscv64-elf-objdump", "-d", "-j.text", "-j.data", "-j.got.plt", output_file], stdout=subprocess.PIPE)
+            rv32objdump_process_2 = subprocess.Popen(["/usr/bin/riscv64-elf-objdump", "-D", "-j.got", output_file], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
+
+            # Concatenate the outputs of the two objdump processes
+            combined_stdout = subprocess.Popen(
+                ["cat"],
+                stdin=subprocess.PIPE,
+                stdout=subprocess.PIPE
+            )
+            if rv32objdump_process_1.stdout and rv32objdump_process_2.stdout:
+                combined_stdout.stdin.write(rv32objdump_process_1.stdout.read()) # pyright: ignore
+                combined_stdout.stdin.write(rv32objdump_process_2.stdout.read()) # pyright: ignore
+                rv32objdump_process_1.stdout.close()
+                rv32objdump_process_2.stdout.close()
+                combined_stdout.stdin.close() # pyright: ignore
+
+            rv32pp_process = subprocess.Popen(["./rv32pp"], stdin=combined_stdout.stdout, stdout=outfile)
+            if combined_stdout.stdout:
+                combined_stdout.stdout.close()  # Allow cat to receive a SIGPIPE if rv32pp exits.
+
             rv32pp_process.wait()
 
         if args.verbose:
