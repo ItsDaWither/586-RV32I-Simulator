@@ -10,7 +10,10 @@ _start:
     li   t1, 0           # rs1 = 0
     la   t2, memory_location # Load address of memory_location into t2
     lhu  t0, 0(t2)       # Load halfword from memory_location + 0 into t0
-    li   t4, 0        # Fail: t4 = 0 (if load incorrect)
+    li   t2, 0x0000C0C0       # Load expected result into t2
+    beq  t0, t2, pass    # Branch to pass if t0 is 0x0000C0C0
+    li   t4, 0          # Fail: t4 = 0
     .word 0           # Stop the simulator
-    li   t4, 1        # Pass: t4 = 1 (if load correct)
+pass:
+    li t4, 1        # Pass: t = 1
     .word 0           # Stop the simulator

@@ -9,7 +9,10 @@ memory_location: .half 0x55AA  # Memory location 0x3000
 _start:
     la   t1, memory_location # rs1 = address of memory_location
     lhu  t0, 0(t1)       # Load halfword from memory_location + 0 into t0
-    li   t4, 0        # Fail: t4 = 0 (if load incorrect)
+    li   t2, 0x000055AA       # Load expected result into t2
+    beq  t0, t2, pass    # Branch to pass if t0 is 0x000055AA
+    li   t4, 0          # Fail: t4 = 0
     .word 0           # Stop the simulator
-    li   t4, 1        # Pass: t4 = 1 (if load correct)
+pass:
+    li t4, 1        # Pass: t = 1
     .word 0           # Stop the simulator
