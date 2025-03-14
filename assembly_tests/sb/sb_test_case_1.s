@@ -10,7 +10,7 @@ _start:
     la   t1, memory_location # rs1 = address of memory_location
     li   t0, 0xABCDEF01  # rs2 = 0xABCDEF01
     sb   t0, 0(t1)       # Store byte from rs2 into memory_location + 0
-    lb   t2, 0(t1)       # Load the byte back from memory
+    lbu  t2, 0(t1)       # Load the byte back from memory
     li   t3, 0x01        # Expected result
     beq  t2, t3, pass    # Branch to pass if t2 == t3
     li   t4, 0           # Fail: t4 = 0 (if store incorrect)

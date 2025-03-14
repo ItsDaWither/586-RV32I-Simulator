@@ -10,7 +10,7 @@ _start:
     la   t1, memory_location # rs1 = address of memory_location
     li   t0, 0x55AA55AA  # rs2 = 0x55AA55AA
     sh   t0, 0(t1)       # Store halfword from rs2 into memory_location + 0
-    lh   t2, 0(t1)       # Load the halfword back from memory
+    lhu  t2, 0(t1)       # Load the halfword back from memory
     li   t3, 0x55AA      # Expected result
     beq  t2, t3, pass    # Branch to pass if t2 == t3
     li   t4, 0          # Fail: t4 = 0
