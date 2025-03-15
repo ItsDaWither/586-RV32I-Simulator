@@ -10,6 +10,11 @@ static int32_t sign_extend(uint32_t value, uint32_t bits) {
                             : (int32_t)value;
 }
 
+// static int32_t sign_extend(uint32_t value, uint32_t bits) {
+//   uint32_t shift = 32 - bits;
+//   return ((int32_t)value << shift) >> shift;
+// }
+
 int execute_addi(Instruction insn, uint32_t *registers, uint32_t *pc) {
   registers[insn.rd] = registers[insn.rs1] + insn.imm;
   return 0;
@@ -28,7 +33,7 @@ int execute_auipc(Instruction insn, uint32_t *registers, uint32_t *pc) {
 int execute_jal(Instruction insn, uint32_t *registers, uint32_t *pc) {
   int32_t offset = insn.imm;
   registers[insn.rd] = *pc + 4; // Store return address
-  *pc = *pc + offset;
+  *pc = *pc + offset - 4;
   return 0;
 }
 
@@ -38,7 +43,7 @@ int execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
   }
   int32_t offset = insn.imm;
   registers[insn.rd] = *pc + 4;
-  *pc = ((registers[insn.rs1] + offset) & (~1)); // clear the last bit
+  *pc = ((registers[insn.rs1] + offset) & (~1)) - 4; // clear the last bit
   return 0;
 }
 
