@@ -9,11 +9,10 @@ The ECALL (environment call) instruction makes a request to the execution enviro
 
 1.  **ECALL with a7 = 94 (Halt):**
     -   **Purpose:** Verify that ECALL with a7 = 94 halts the simulator.
-    -   **Registers:** a7 = 94, rd = any, rs1 = any, rs2 = any, PC = any
+    -   **Registers:** a7 = 94, rd = any, rs1 = any, rs2 = any
     -   **Expected Result:** The simulator should halt execution.
 
 2.  **ECALL with a7 != 94 (Unknown ECALL):**
     -   **Purpose:** Verify that ECALL with a7 != 94 prints an error message and halts the simulator.
-    -   **Registers:** a7 = 1, rd = any, rs1 = any, rs2 = any, PC = any
+    -   **Registers:** a7 = 1, rd = any, rs1 = any, rs2 = any
     -   **Expected Result:** The simulator should print an error message to stderr and halt execution.
-

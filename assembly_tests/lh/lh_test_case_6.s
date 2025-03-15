@@ -1,6 +1,6 @@
 .section .data
 .align 2
-memory_location: .half 0xC0C0  # Memory location 0x100
+memory_location: .half 0xC0C0
 
 .section .text
 .align 2
