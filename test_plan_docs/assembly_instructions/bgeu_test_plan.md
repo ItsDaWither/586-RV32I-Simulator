@@ -10,13 +10,11 @@ The BGEU (branch if greater than or equal unsigned) instruction branches to a ta
 1.  **rs1 > rs2 - Branch Taken (Positive Offset):**
     -   **Purpose:** Verify branch is taken when rs1 > rs2 (unsigned) and offset is positive.
     -   **Registers:** rs1 = 20, rs2 = 10
-    -   **Offset:** offset = 0x20 (represented as 12-bit signed offset in assembly)
     -   **Expected Result:** Branch Taken
 
 2.  **rs1 > rs2 - Branch Taken (Negative Offset):**
     -   **Purpose:** Verify branch is taken when rs1 > rs2 (unsigned) and offset is negative.
     -   **Registers:** rs1 = 0, rs2 = 0xFFFFFFF0 (unsigned representation of -16)
-    -   **Offset:** offset = -0x20 (represented as 2's complement 12-bit signed offset in assembly)
     -   **Expected Result:** Branch Taken
 
 3.  **rs1 > rs2 - Branch Taken (Zero Offset):**
