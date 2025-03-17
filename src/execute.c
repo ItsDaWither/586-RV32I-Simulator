@@ -34,6 +34,9 @@ int execute_jal(Instruction insn, uint32_t *registers, uint32_t *pc) {
   int32_t offset = insn.imm;
   registers[insn.rd] = *pc + 4; // Store return address
   *pc = *pc + offset - 4;
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned jump target
+  }
   return 0;
 }
 
@@ -44,12 +47,18 @@ int execute_jalr(Instruction insn, uint32_t *registers, uint32_t *pc) {
   int32_t offset = insn.imm;
   registers[insn.rd] = *pc + 4;
   *pc = ((registers[insn.rs1] + offset) & (~1)) - 4; // clear the last bit
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
+  }
   return 0;
 }
 
 int execute_beq(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] == registers[insn.rs2]) {
     *pc = *pc + insn.imm - 4;
+  }
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
   }
   return 0;
 }
@@ -58,11 +67,17 @@ int execute_bne(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] != registers[insn.rs2]) {
     *pc = *pc + insn.imm - 4;
   }
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
+  }
   return 0;
 }
 int execute_blt(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if ((int32_t)registers[insn.rs1] < (int32_t)registers[insn.rs2]) {
     *pc = *pc + insn.imm - 4;
+  }
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
   }
   return 0;
 }
@@ -71,6 +86,9 @@ int execute_bge(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if ((int32_t)registers[insn.rs1] >= (int32_t)registers[insn.rs2]) {
     *pc = *pc + insn.imm - 4;
   }
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
+  }
   return 0;
 }
 
@@ -78,12 +96,18 @@ int execute_bltu(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] < registers[insn.rs2]) {
     *pc = *pc + insn.imm - 4;
   }
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
+  }
   return 0;
 }
 
 int execute_bgeu(Instruction insn, uint32_t *registers, uint32_t *pc) {
   if (registers[insn.rs1] >= registers[insn.rs2]) {
     *pc = *pc + insn.imm - 4;
+  }
+  if (*pc % 4 != 0) {
+    return 1;   // Trap on misaligned branch target
   }
   return 0;
 }
