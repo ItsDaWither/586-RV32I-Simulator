@@ -39,6 +39,11 @@ int main(int argc, char *argv[]) {
     GtkWidget *entry_stack = gtk_entry_new();
     gtk_entry_set_text(GTK_ENTRY(entry_stack), "65536");
     gtk_grid_attach(GTK_GRID(grid), entry_stack, 1, 2, 1, 1);
+
+    // Verbose Mode check button
+    GtkWidget *check_verbose = gtk_check_button_new_with_label("Verbose Mode");
+    gtk_grid_attach(GTK_GRID(grid), check_verbose, 0, 3, 2, 1);
+    
     //Display window
     gtk_widget_show_all(window);
     gtk_main();
