@@ -13,9 +13,14 @@ int main(int argc, char *argv[]) {
   uint32_t start_address = 0;
   uint32_t stack_address = MEMORY_SIZE_BYTES;
   int verbose_mode = 0;
+  int single_step = 0;
 
   if (argc > 1) {
-    if (strcmp(argv[1], "verbose") == 0) {
+    if (strcmp(argv[1], "single") == 0) {
+      verbose_mode = 1;
+      single_step = 1;
+    }
+    else if (strcmp(argv[1], "verbose") == 0) {
       verbose_mode = 1;
     } else if (strcmp(argv[1], "silent") == 0) {
       verbose_mode = 0;
@@ -89,6 +94,17 @@ int main(int argc, char *argv[]) {
 
     registers[0] = 0; // Reset zero register if it was written to
     pc = pc + 4;
+
+    if (single_step) {
+      printf("Continue? [Y/n] ");
+      char input = getchar();
+      // Clear the input buffer
+      while (getchar() != '\n');
+      if (input != 'Y' && input != 'y') {
+        printf("Simulation halted by user.\n");
+        break;
+      }
+    }
   }
 
   printf("Final PC: 0x%08x\n", pc);
