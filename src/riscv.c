@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
     // Execute
     int failure = execute_instruction(decoded, registers, &pc, memory);
     if (failure) {
-      printf("Simulation halt -- zero or invalid instruction.\n");
+      printf("Simulation halt.\n");
       break;
     }
 
